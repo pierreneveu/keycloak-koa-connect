@@ -43,7 +43,7 @@ class Config {
    * 根据路径加载配置文件
    * @param {String} configPath Path to a `keycloak.json` configuration.
    */
-  public loadConfiguration(configPath: string | number | Buffer | import ('url').URL) {
+  public loadConfiguration(configPath: string | number | Buffer | import('url').URL) {
     const json = fs.readFileSync(configPath);
     const config = JSON.parse(json.toString());
     this.configure(config);

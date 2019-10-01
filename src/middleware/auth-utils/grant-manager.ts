@@ -16,10 +16,7 @@ const getProtocol = (opts: http.ClientRequestArgs): { request: any } => {
   return opts.protocol === 'https:' ? https : http;
 };
 
-const nodeify = (
-  promise: Promise<any>,
-  cb: any,
-) => {
+const nodeify = (promise: Promise<any>, cb: any) => {
   if (typeof cb !== 'function') {
     return promise;
   }
@@ -49,11 +46,7 @@ const refreshHandler = (manager: GrantManager, grant: Grant) => (
     .catch((err: any) => reject(err));
 };
 
-const validationHandler = (manager: GrantManager, token: any) => (
-  resolve: any,
-  reject: any,
-  json: string,
-) => {
+const validationHandler = (manager: GrantManager, token: any) => (resolve: any, reject: any, json: string) => {
   const data = JSON.parse(json);
   if (!data.active) {
     resolve(false);
@@ -99,22 +92,16 @@ const fetch = (
     const data = typeof params === 'string' ? params : querystring.stringify(params);
     options.headers['Content-Length'] = data.length;
 
-    const req = getProtocol(options).request(
-      options,
-      (response: {
-        statusCode: string | number;
-        on: any;
-      }) => {
-        if (response.statusCode < 200 || response.statusCode > 299) {
-          return reject(response.statusCode + ':' + http.STATUS_CODES[response.statusCode]);
-        }
-        let json = '';
-        response.on('data', (d: { toString: () => string }) => (json += d.toString()));
-        response.on('end', () => {
-          handler(resolve, reject, json);
-        });
-      },
-    );
+    const req = getProtocol(options).request(options, (response: { statusCode: string | number; on: any }) => {
+      if (response.statusCode < 200 || response.statusCode > 299) {
+        return reject(response.statusCode + ':' + http.STATUS_CODES[response.statusCode]);
+      }
+      let json = '';
+      response.on('data', (d: { toString: () => string }) => (json += d.toString()));
+      response.on('end', () => {
+        handler(resolve, reject, json);
+      });
+    });
     req.write(data);
     req.on('error', reject);
     req.end();
@@ -306,8 +293,8 @@ class GrantManager {
     }
 
     options.headers = {
-      'Authorization': 'Bearer ' + t,
-      'Accept': 'application/json',
+      Authorization: 'Bearer ' + t,
+      Accept: 'application/json',
       'X-Client': 'keycloak-nodejs-connect',
     };
 

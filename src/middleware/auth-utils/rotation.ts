@@ -37,27 +37,21 @@ class Rotation {
     options.method = 'GET';
 
     const promise = new Promise((resolve, reject) => {
-      const req = getProtocol(options).request(
-        options,
-        (response: {
-          statusCode: number;
-          on: any;
-        }) => {
-          if (response.statusCode < 200 || response.statusCode >= 300) {
-            return reject('Error fetching JWK Keys');
+      const req = getProtocol(options).request(options, (response: { statusCode: number; on: any }) => {
+        if (response.statusCode < 200 || response.statusCode >= 300) {
+          return reject('Error fetching JWK Keys');
+        }
+        let json = '';
+        response.on('data', (d: { toString: () => string }) => (json += d.toString()));
+        response.on('end', () => {
+          const data = JSON.parse(json);
+          if (data.error) {
+            reject(data);
+          } else {
+            resolve(data);
           }
-          let json = '';
-          response.on('data', (d: { toString: () => string }) => (json += d.toString()));
-          response.on('end', () => {
-            const data = JSON.parse(json);
-            if (data.error) {
-              reject(data);
-            } else {
-              resolve(data);
-            }
-          });
-        },
-      );
+        });
+      });
       req.on('error', reject);
       req.end();
     });

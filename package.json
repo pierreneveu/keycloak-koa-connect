@@ -19,13 +19,15 @@
   "author": "algoan",
   "license": "Apache-2.0",
   "dependencies": {
+    "@types/koa": "2.0.50",
+    "koa": "^2.5.2",
+    "@types/koa-router": "7.0.42",
     "jwk-to-pem": "^2.0.0",
     "prettier": "1.18.2"
   },
   "devDependencies": {
     "@types/jwk-to-pem": "2.0.0",
     "@types/node": "^10.5.7",
-    "koa": "^2.5.2",
     "koa-router": "^7.4.0",
     "koa-session": "^5.8.2",
     "ts-node": "^7.0.0",

@@ -10,12 +10,12 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "sourceMap": true,
-
     "sourceRoot": "src",
     "outDir": "dist",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true
   },
+  "include": ["src"],
   "exclude": [
     "node_modules"
   ]

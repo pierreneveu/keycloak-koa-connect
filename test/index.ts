@@ -14,8 +14,8 @@ const appRouter = new KoaRouter();
 const keycloakKoaConnect = new KeycloakKoaConnect({}, join(__dirname, '..', 'keycloak.json'));
 
 const middlewares = keycloakKoaConnect.middleware();
-middlewares.forEach((mid) => app.use(mid));
-koaRouter.all('*', (ctx, next) => {
+middlewares.forEach((mid: any) => app.use(mid));
+koaRouter.all('*', (ctx: any, next: any) => {
   ctx.body = 'Hello Koa';
 });
 
